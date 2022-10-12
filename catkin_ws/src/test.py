@@ -49,7 +49,19 @@ display_trajectory_publisher = rospy.Publisher(
     queue_size=50
 )
 
-def get_robot_status(robot,move_group,print:bool):
+def get_robot_status(robot,move_group,print:bool = False) -> tuple:
+    """This function allows to get infos about specified robot and move_group. Also,
+    the function can optionally print state info in a terminal if ```print``` argument
+    is set to ```True```
+    ## Parameters :
+    * robot [```in```] : robot whose we want know state
+    * move_group [```in```] : group whose we want know info
+    * print [```in```] : optional. Set to ```True``` to print infos in a terminal. Default value is ```False```
+    
+    ## Return value :
+    A tuple containing planning frame name and end effector name as a string, and groupes' name that take
+    part to the specified robot"""
+
     # We can get the name of the reference frame for this robot:
     planning_frame = move_group.get_planning_frame()
 
@@ -71,7 +83,9 @@ def get_robot_status(robot,move_group,print:bool):
 
 (planning_frame,eef_link,group_names) = get_robot_status(robot,move_group,print=False)
 
-def new_goal_pose_message(x,y,z, qw, qx, qy, qz):
+def new_goal_pose_message(x : float,y : float, z : float, qw : float, qx : float, qy : float, qz : float) -> geometry_msgs.msg.Pose:
+    """Define a new goal Pose message for the end effector, in operational coordinates specified in arguments
+    (position and orientation)"""
     pose_goal = geometry_msgs.msg.Pose()
     pose_goal.orientation.w = qw
     pose_goal.orientation.x = qx
