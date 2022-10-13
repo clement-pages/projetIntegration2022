@@ -1,7 +1,6 @@
 # Python 2/3 compatibility imports
 from __future__ import print_function
 from time import time
-from xmlrpc.client import Boolean
 from six.moves import input
 
 import sys
@@ -49,17 +48,16 @@ display_trajectory_publisher = rospy.Publisher(
     queue_size=50
 )
 
-def get_robot_status(robot,move_group,print:bool = False) -> tuple:
+def get_robot_status(robot : moveit_commander.RobotCommander, move_group : moveit_commander.MoveGroupCommander, print:bool = False) -> tuple:
     """This function allows to get infos about specified robot and move_group. Also,
-    the function can optionally print state info in a terminal if ```print``` argument
-    is set to ```True```
+    the function can optionally print state info in a terminal if `print` argument
+    is set to `True`
     ## Parameters :
-    * robot [```in```] : robot whose we want know state
-    * move_group [```in```] : group whose we want know info
-    * print [```in```] : optional. Set to ```True``` to print infos in a terminal. Default value is ```False```
-    
+    * `robot` : robot whose we want know state
+    * `move_group` : group whose we want know info
+    * `print` : optional. Set to ```True``` to print infos in a terminal. Default value is ```False```
     ## Return value :
-    A tuple containing planning frame name and end effector name as a string, and groupes' name that take
+    A `tuple` containing planning frame name and end effector name as a string, and groupes' name that take
     part to the specified robot"""
 
     # We can get the name of the reference frame for this robot:
@@ -85,20 +83,40 @@ def get_robot_status(robot,move_group,print:bool = False) -> tuple:
 
 def new_goal_pose_message(x : float,y : float, z : float, qw : float, qx : float, qy : float, qz : float) -> geometry_msgs.msg.Pose:
     """Define a new goal Pose message for the end effector, in operational coordinates specified in arguments
-    (position and orientation)"""
+    (position and orientation). Position is given in cartesian format and rotation with quaternions parameters
+    ## Parameters:
+    * `x`  : x coordinate for end effector goal position
+    * `y`  : y coordinate for end effector goal position
+    * `z`  : z coordinate for end effector goal position
+    * `qw` : first quaternion parameter
+    * `qx` : second quaternion parameter
+    * `qy` : third quaternion parameter
+    * `qz` : fourth quaternion parameter
+    ## Return value:
+    Return pose message generated from specified arguments for position and orientation for the end effector"""
+
     pose_goal = geometry_msgs.msg.Pose()
+    #Orientation :
     pose_goal.orientation.w = qw
     pose_goal.orientation.x = qx
     pose_goal.orientation.y = qy
     pose_goal.orientation.z = qz
-
+    #Position:
     pose_goal.position.x = x
     pose_goal.position.y = y
     pose_goal.position.z = z
     return pose_goal
 
 
-def cartesian_path(scale:int):
+def cartesian_path(scale : float, move_group : moveit_commander.MoveGroupCommander) -> tuple:
+    """Create a basic movement for the arm in a cartesian frame First move up (z-axis), then (y-axis)
+    before move forward (x-axis) and finally a second sideway movement (y-axis)
+    ## Parameters:
+    * `scale` : specified movement amplitude
+    * `move_group` : robot group to move
+    ##Return value :
+    Return  a `tuple` that contains planned path and a fraction of how much of the path was followed """
+
     waypoints = []
 
     wpose = move_group.get_current_pose().pose
@@ -124,7 +142,19 @@ def cartesian_path(scale:int):
     # Note: We are just planning, not asking move_group to actually move the robot yet:
     return plan, fraction
 
-def wait_for_state_update(scene, box_name, box_is_known=False,box_is_attached = False, timeout = 10):
+
+def wait_for_state_update(scene : moveit_commander.PlanningSceneInterface, box_name : str, box_is_known : bool = False, box_is_attached : bool = False, timeout : float = 10) -> bool:
+    """Function to wait for the simulation to be updated with added, deleted, attached or detached components
+    ## Parameters:
+    * `scene` : scene to be updated
+    * `box_name` : box name whose we wait to be added on the scene
+    * `box_is_know` : boolean to indicate if the box must be known by the scene or not
+    * `box_is_attached` : boolean to indicate if the box must be attached with an element in the scene or not
+    * `timeout` : float that indicates number of seconds to wait before timeout
+    ## Return value
+    Return `True` if the scene was successfully update, `False` otherwise
+    *"""
+
     start = rospy.get_time()
     seconds = rospy.get_time()
     while (seconds - start < timeout) and not rospy.is_shutdown():
@@ -148,7 +178,21 @@ def wait_for_state_update(scene, box_name, box_is_known=False,box_is_attached = 
     return False
 
 
-def add_box(scene, frame_id:str, name:str, x:float, y:float, z:float, width:float, lenght:float, height:float):
+def add_box(scene : moveit_commander.PlanningSceneInterface, frame_id : str, name : str, x : float, y : float, z : float, width : float, lenght : float, height : float) -> bool:
+    """Add a box to the scene at the specified cartesian position and with specified dimensions
+    ## Parameters :
+    * `scene` : new box will be added to this `PlanningSceneInterface scene`
+    * `frame_id` : string representing the frame at which the box will be added
+    * `name` : name for the box to add, as a string
+    * `x` : coordinate along x-axis for the box cartesian position
+    * `y` : coordinate along y-axis for the box cartesian position
+    * `z` : coordinate along z-axis for the box cartesian position
+    * `width` : box width
+    * `length` : box length
+    * `height` : box height
+    ## Return value :
+    `True` if the box was succesfully added to the specified scene, `False` otherwise"""
+
     box_pose = geometry_msgs.msg.PoseStamped()
     box_pose.header.frame_id = frame_id
     box_pose.pose.orientation.w = 1.0
@@ -158,23 +202,52 @@ def add_box(scene, frame_id:str, name:str, x:float, y:float, z:float, width:floa
     scene.add_box(name, box_pose, size=(width, lenght, height ))
     return wait_for_state_update(scene,name,True,False)
 
-def remove_box(scene, name):
+
+def remove_box(scene : moveit_commander.PlanningSceneInterface, name : str) -> bool:
+    """Remove box whose `name` is specified in argument from the specified `scene`
+    ## Parameters :
+    * `scene` : scene where is the box to remove, as `PlanningSceneInterface`
+    * `name` : name of the box to be remove, as a string
+    ## Return value :
+    `True` if the box was the box was succesfully remove from the scene, `False` otherwise
+    """
+
     taille = scene.get_attached_objects()
     #Make sure the box is detached
     scene.remove_world_object(name)
     return wait_for_state_update(scene,name,False,False)
 
-def attach_box(scene, robot, eef_link, box_name : str, grasping_group : str):
-    """"""
+
+def attach_box(scene : moveit_commander.PlanningSceneInterface, robot : moveit_commander.RobotCommander, eef_link : str, box_name : str, grasping_group : str) -> bool:
+    """Attach box whose name is specified in argument to the indicated r`obot` end effector `eef_link`
+    ## Paramters :
+    * `scene` : scene at which the box must be attached, as a `PlanningSceneInterface`
+    * `robot` : robot at which the box must be attached, as `RobotCommander`
+    * `eef_link` : robot end effector name, as a string
+    * `box_name` : name of the box to be attached
+    * `grasping_group` : group at which the bow will be attached. Group must take part of the robot structure definition and correspond to the end effector
+    ##Return value :
+    `True` if the box was successfully attached to the robot end effector, otherwise `False`
+    *"""
+
     touch_links = robot.get_link_names(group=grasping_group)
     scene.attach_box(eef_link, box_name, touch_links=touch_links)
     print("boite attrapee")
     return wait_for_state_update(scene, box_name, box_is_known=False,box_is_attached = True, timeout = 4)
 
-def detach_box(scene, eef_link, box_name):
-    """"""
+
+def detach_box(scene : moveit_commander.PlanningSceneInterface, eef_link : str, box_name : str) -> bool:
+    """Detach box whose the name is passed in arguments from the specified robot end effector
+    ## Parameters :
+    * `scene` : scene where is attached the box, as a `PlanningSceneInterface`
+    * `eef_link` : end effector name, as a string
+    * `box_name` : name of the box to be detached from the robot end effector
+    ## Return value :
+    `True` if the box was successfully detached from the robot end effector, `False` otherwise"""
+
     scene.remove_attached_object(eef_link, name=box_name)
     return wait_for_state_update(scene, box_name, box_is_known=True,box_is_attached = False, timeout = 4)
+
 
 move_group.go(PARKING,wait=True)
 move_group.stop()
