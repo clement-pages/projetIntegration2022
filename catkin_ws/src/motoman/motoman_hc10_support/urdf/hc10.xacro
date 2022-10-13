@@ -2,4 +2,11 @@
 <robot name="motoman_hc10" xmlns:xacro="http://ros.org/wiki/xacro">
   <xacro:include filename="$(find motoman_hc10_support)/urdf/hc10_macro.xacro" />
   <xacro:motoman_hc10 prefix=""/>
+  <xacro:include filename="$(find motoman_hc10_support)/urdf/yaskawa.control.xacro"/>
+  <xacro:yaskawa_control arm_id="yaskawa"/>
+  <xacro:include filename="$(find motoman_hc10_support)/urdf/yaskawa.gazebo.xacro"/>
+  <xacro:yaskawa_gazebo arm_id=""/>
+  
+  <xacro:include filename="$(find motoman_hc10_support)/urdf/kinect_camera.gazebo"/>
+  <xacro:camera prefix=""/>
 </robot>

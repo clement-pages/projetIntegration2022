@@ -250,5 +250,20 @@
       <parent link="${prefix}base_link"/>
       <child link="${prefix}base"/>
     </joint>
+    
+    	<link name="${prefix}camera_rgb_frame"/>
+	
+	<!-- Attach Kinect to table -->
+	<joint type="fixed" name="tool0_camera_joint">
+	    <origin xyz="0.15 -1 0.1" rpy="0 0 1.57"/>
+	    <child link="${prefix}camera_rgb_frame"/>
+	    <parent link="${prefix}tool0"/>
+	    <axis xyz="0 0 0" rpy="0 0 0"/>
+	    <limit effort="10000" velocity="1000"/>
+	    <dynamics damping="1.0" friction="1.0"/>
+	</joint>
+
+	
+	
   </xacro:macro>
 </robot>
