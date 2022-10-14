@@ -31,18 +31,28 @@ catkin build
 . /devel/setup.bash
 ```
 
-## Lancement de la simulation
+## Lancement de la simulation Rviz
 
-Toujours dans le répertoire `catkin_ws` exécuter la commande suivante selon ce que vous souhaitez lancer
-* Pour lancer uniquement la simulation dans **Rviz**
+Toujours dans le répertoire `catkin_ws` exécuter les commandes suivantes pour lancer la simulation dans **Rviz**
+1. Lancer la simulation
 ```
 roslaunch yaskawa_moveit_config demo.launch
 ```
-1. Pour lancer la simulation dans **Rviz** et dans **Gazebo**
+2. Lancer le script permettant au robot de réaliser une action de pick and place
+```
+python3 src/script_python/pick_and_place.py
+```
+Le robot réalise alors une action de pick and place dans la simulation d'un cube ajouté par le script python
+
+## Lancement de la simulation Rviz + Gazebo
+
+Toujours dans le répertoire `catkin_ws` exécuter les commandes suivantes pour lancer la simulation dans **Rviz** et **Gazebo**
+
+1. Lancer la simulation
 ```
 roslaunch yaskawa_moveit_config demo_gazebo.launch
 ```
-2. Lancer le script python
+2. Lancer le script python permettant de générer le nuage de point d'une boîte dans la scène
 ```
-python3 src/test.py
+python3 src/script_python/gazebot_box.py
 ```
