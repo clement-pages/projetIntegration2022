@@ -38,7 +38,7 @@ Toujours dans le répertoire `catkin_ws` exécuter les commandes suivantes pour 
 ```
 roslaunch yaskawa_moveit_config demo.launch
 ```
-2. Lancer le script permettant au robot de réaliser une action de pick and place
+2. Dans un second terminal, sourcer le projet et lancer le script permettant au robot de réaliser une action de pick and place
 ```
 python3 src/script_python/pick_and_place.py
 ```
@@ -52,7 +52,7 @@ Toujours dans le répertoire `catkin_ws` exécuter les commandes suivantes pour 
 ```
 roslaunch yaskawa_moveit_config demo_gazebo.launch
 ```
-2. Lancer le script python permettant de générer le nuage de point d'une boîte dans la scène
+2. Dans un second terminal, sourcer et lancer le script python permettant de générer le nuage de point d'une boîte dans la scène
 ```
 python3 src/script_python/gazebot_box.py
 ```
