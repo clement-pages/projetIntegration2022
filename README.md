@@ -33,12 +33,12 @@ catkin build
 
 ## Lancement de la simulation
 
-Toujours dans le répertoire `catkin_ws` exécuter la commande suivante selon ce que vous souhaitez lancer
+1. Toujours dans le répertoire `catkin_ws` exécuter la commande suivante selon ce que vous souhaitez lancer
 * Pour lancer uniquement la simulation dans **Rviz**
 ```
 roslaunch yaskawa_moveit_config demo.launch
 ```
-1. Pour lancer la simulation dans **Rviz** et dans **Gazebo**
+* Pour lancer la simulation dans **Rviz** et dans **Gazebo**
 ```
 roslaunch yaskawa_moveit_config demo_gazebo.launch
 ```
