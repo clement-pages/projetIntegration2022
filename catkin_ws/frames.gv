@@ -1,0 +1,12 @@
+digraph G {
+"world" -> "base_link"[label="Broadcaster: /virtual_joint_broadcaster_0\nAverage rate: 10000.000 Hz\nMost recent transform: 0.000 ( 62.002 sec old)\nBuffer length: 0.000 sec\n"];
+"tool0" -> "camera_depth_optical_frame"[label="Broadcaster: /camera_to_optical_tf\nAverage rate: 79.603 Hz\nMost recent transform: 62.005 ( -0.003 sec old)\nBuffer length: 3.530 sec\n"];
+edge [style=invis];
+ subgraph cluster_legend { style=bold; color=black; label ="view_frames Result";
+"Recorded at time: 62.002"[ shape=plaintext ] ;
+ }->"world";
+edge [style=invis];
+ subgraph cluster_legend { style=bold; color=black; label ="view_frames Result";
+"Recorded at time: 62.002"[ shape=plaintext ] ;
+ }->"tool0";
+}

@@ -255,7 +255,7 @@
 	
 	<!-- Attach Kinect to table -->
 	<joint type="fixed" name="tool0_camera_joint">
-	    <origin xyz="0.15 -1 0.1" rpy="0 0 1.57"/>
+	    <origin xyz="0 0 0" rpy="1.57 -1.57 0"/>
 	    <child link="${prefix}camera_rgb_frame"/>
 	    <parent link="${prefix}tool0"/>
 	    <axis xyz="0 0 0" rpy="0 0 0"/>

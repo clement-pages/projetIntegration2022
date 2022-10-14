@@ -19,4 +19,13 @@
     <arg name="moveit_controller_manager" value="ros_control" />
   </include>
   
+  <param name="my_robot_description" textfile="$(find motoman_hc10_support)/urdf/hc10.xacro"/>
+    
+   <node pkg="robot_state_publisher" type="robot_state_publisher" name="rob_st_pub" >
+    </node>
+    
+  <node pkg="tf" type="static_transform_publisher" name="camera_to_optical_tf" args="0 0 0 4.71 0 -1.57 camera_rgb_frame camera_depth_optical_frame 10" />
+  
+  <!-- spawn a cube for pick and place -->
+	<node name="spawn_cube" pkg="gazebo_ros" type="spawn_model" args="-file $(find motoman_hc10_support)/urdf/box.urdf -urdf -x 0.4 -y 0.4 -z 1 -model cube" />
 </launch>
