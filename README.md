@@ -9,7 +9,7 @@ L'installation et le lancement du projet décrit ci-après suppose que l'ensembl
 
 Pour installer le répertoire du projet suivre les instructions suivantes :
 
-1. Télécharger l'archive et la décompresser
+1. Télécharger l'archive et la décompresser ou cloner le répertoire
 
 2. Se déplacer dans le répertoire
 ```
