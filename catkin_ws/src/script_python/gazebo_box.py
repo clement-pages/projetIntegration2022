@@ -1,4 +1,4 @@
-from Fonctions import *
+from catkin_ws.src.script_python.simulation import *
 # Ce script doit être lancé après gazebo:
 # roslaunch yaskawa_moveit_config demo_gazebo.launch 
 import os

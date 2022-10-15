@@ -2,6 +2,7 @@
 from __future__ import print_function
 from time import time
 from six.moves import input
+from typing import Union
 
 import sys
 import copy
@@ -59,32 +60,33 @@ def get_robot_status(robot : moveit_commander.RobotCommander, move_group : movei
     return(planning_frame,eef_link,group_names)
 
 
-
-def new_goal_pose_message(x : float,y : float, z : float, qw : float, qx : float, qy : float, qz : float) -> geometry_msgs.msg.Pose:
-    """Define a new goal Pose message for the end effector, in operational coordinates specified in arguments
-    (position and orientation). Position is given in cartesian format and rotation with quaternions parameters
+def go_to_target(move_group : moveit_commander.MoveGroupCommander, target : Union[list, geometry_msgs.msg.Pose]) -> None:
+    """Perform a movement for the specified `move_group` to the indicated `target`
     ## Parameters:
-    * `x`  : x coordinate for end effector goal position
-    * `y`  : y coordinate for end effector goal position
-    * `z`  : z coordinate for end effector goal position
-    * `qw` : first quaternion parameter
-    * `qx` : second quaternion parameter
-    * `qy` : third quaternion parameter
-    * `qz` : fourth quaternion parameter
+    * `move_group` : robot group to move
+    * `target` : target towards the end effector must go, as a list of 6 parameters with cartesian position and 
+    rotation for the end effector or a list of seven arguments with cartesain position and four quaternions parameters 
+    for rotation, or a Pose message
     ## Return value:
-    Return pose message generated from specified arguments for position and orientation for the end effector"""
+    No return value"""
 
-    pose_goal = geometry_msgs.msg.Pose()
-    #Orientation :
-    pose_goal.orientation.w = qw
-    pose_goal.orientation.x = qx
-    pose_goal.orientation.y = qy
-    pose_goal.orientation.z = qz
-    #Position:
-    pose_goal.position.x = x
-    pose_goal.position.y = y
-    pose_goal.position.z = z
-    return pose_goal
+    move_group.set_pose_target(target)
+    move_group.go()
+    move_group.stop()
+    move_group.clear_pose_targets()
+
+
+def go_to_target_joints_values(move_group : moveit_commander.MoveGroupCommander, target : list) -> None:
+    """Perform a movement for the specified `move_group` to the indicated `targe``given in joint space
+    ## Parameters :
+    * `move_group` : robot group to move
+    * `target` : target is a list that contains goal state for each robot joint
+    ## Return value :
+    No return value"""
+
+    move_group.go(joints = target)
+    move_group.stop()
+    move_group.clear_pose_targets()
 
 
 def cartesian_path(scale : float, move_group : moveit_commander.MoveGroupCommander) -> tuple:
@@ -147,13 +149,13 @@ def wait_for_state_update(scene : moveit_commander.PlanningSceneInterface, box_n
 
         # Test if we are in the expected state
         if (box_is_attached == is_attached) and (box_is_known == is_known):
-            print("box "+box_name+" updated\n")
+            print(f"box {box_name} updated")
             return True
 
         # Sleep so that we give other threads time on the processor
         rospy.sleep(0.1)
         seconds = rospy.get_time()
-    print("timeout for box "+box_name+"\n")
+    print(f"timeout for box {box_name}")
     return False
 
 
@@ -211,7 +213,7 @@ def attach_box(scene : moveit_commander.PlanningSceneInterface, robot : moveit_c
 
     touch_links = robot.get_link_names(group=grasping_group)
     scene.attach_box(eef_link, box_name, touch_links=touch_links)
-    print("boite attrapee")
+    print(f"box {box_name} was picked")
     return wait_for_state_update(scene, box_name, box_is_known=False,box_is_attached = True, timeout = 4)
 
 
@@ -225,22 +227,5 @@ def detach_box(scene : moveit_commander.PlanningSceneInterface, eef_link : str, 
     `True` if the box was successfully detached from the robot end effector, `False` otherwise"""
 
     scene.remove_attached_object(eef_link, name=box_name)
+    print(f"box {box_name} was placed")
     return wait_for_state_update(scene, box_name, box_is_known=True,box_is_attached = False, timeout = 4)
-
-
-
-
-
-'''
-(plan,fraction) = cartesian_path(scale=1)
-# Affichage 
-display_trajectory = moveit_msgs.msg.DisplayTrajectory()
-display_trajectory.trajectory_start = robot.get_current_state()
-display_trajectory.trajectory.append(plan)
-# Publish
-display_trajectory_publisher.publish(display_trajectory)
-
-move_group.execute(plan, wait=True)
-'''
-
-# robot_end_effector_pose = robot.get_group("yaskawa_arm").get_current_pose()
