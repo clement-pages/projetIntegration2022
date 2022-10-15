@@ -1,4 +1,12 @@
 # Python 2/3 compatibility imports
+#***********************************************#
+#                                               #
+#        PROJET INTEGRATION 2022-2023           #
+#       Muratory Bastian - Pagés Clément        #
+#                                               #
+#***********************************************#
+
+
 from __future__ import print_function
 from time import time
 from six.moves import input
