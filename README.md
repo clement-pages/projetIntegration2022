@@ -3,7 +3,7 @@
 
 ## Pré-requis 
 
-L'installation et le lancement du projet décrit ci-après suppose que l'ensemble des dépendances nécessaires ont été préalablement installées (en particulier ROS noetic)
+L'installation et le lancement du projet décrit ci-après suppose que le projet est téléchargé dans un environnement similaire à celui des TP réalisés en salle. En particulier, on suppose ici que ROS noetic, Rviz, Moveit! et Gazebo ainsi que les dépendances nécessaires au fonctionnement du projet sont correctement installés.
 
 ## Installation
 
