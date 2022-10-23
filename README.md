@@ -42,7 +42,16 @@ roslaunch yaskawa_moveit_config demo.launch
 ```
 python3 src/script_python/pick_and_place.py
 ```
-Le robot réalise alors une action de pick and place dans la simulation d'un cube ajouté par le script python
+Le robot réalise alors une action de pick and place dans la simulation d'un cube ajouté par le script python. Un autre script permet de réaliser cette même tâche, mais avec cette fois un obstacle se trouvant sur la trajectoire du robot. Pour exécuter ce script :
+1. Si Moveit et Rviz sont en train de s'exécuter, les arrêter en fermant le terminal lancer précédemment ou en faisait `CTRL + C` dans ce terminal
+2. Relancer la simulation
+```
+roslaunch yaskawa_moveit_config demo.launch
+```
+3. Dans un second terminal, sourcer le projet et lancer le script
+```
+python3 src/script_python/pick_and_place_obstacle.py
+```
 
 ## Lancement de la simulation Rviz + Gazebo
 
@@ -54,5 +63,5 @@ roslaunch yaskawa_moveit_config demo_gazebo.launch
 ```
 2. Dans un second terminal, sourcer et lancer le script python permettant de générer le nuage de point d'une boîte dans la scène
 ```
-python3 src/script_python/gazebot_box.py
+python3 src/script_python/gazebo_box.py
 ```
