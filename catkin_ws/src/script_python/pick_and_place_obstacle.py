@@ -54,7 +54,7 @@ if __name__ == '__main__':
     add_box(scene, "world", BOX_FLOOR_NAME, 0, 0, -0.06, 5, 5, 0.1)                           #box that represents the floor
     add_box(scene, "world", BOX_NAME_1, BOX_1_POSE[0], BOX_1_POSE[1], 0.1, 0.2, 0.2, 0.2)     #box to pick
     add_box(scene, "world", BOX_NAME_2, BOX_2_POSE[0], BOX_2_POSE[1], 0.1, 0.2, 0.2, 0.2)     #box where we want to place the first box
-    add_box(scene, "world", BOX_NAME_OBT_1, 0.5, 0.75, 0.6, 0.3, 0.3, 0.3)                    #Obstacle box
+    add_box(scene, "world", BOX_NAME_OBT_1, 0.5, 0.72, 0.6, 0.3, 0.3, 0.3)                    #Obstacle box
 
     #Make the pick and place action:
 
