@@ -43,7 +43,7 @@ roslaunch yaskawa_moveit_config demo.launch
 python3 src/script_python/pick_and_place.py
 ```
 Le robot réalise alors une action de pick and place dans la simulation d'un cube ajouté par le script python. Un autre script permet de réaliser cette même tâche, mais avec cette fois un obstacle se trouvant sur la trajectoire du robot. Pour exécuter ce script :
-1. Si Moveit et Rviz sont en train de s'exécuter, les arrêter en fermant le terminal lancer précédemment ou en faisait `CTRL + C` dans ce terminal
+1. Si **Moveit** et **Rviz** sont en train de s'exécuter, les arrêter en fermant le terminal lancer précédemment ou en faisant `CTRL + C` dans ce terminal
 2. Relancer la simulation
 ```
 roslaunch yaskawa_moveit_config demo.launch
@@ -61,7 +61,7 @@ Toujours dans le répertoire `catkin_ws` exécuter les commandes suivantes pour 
 ```
 roslaunch yaskawa_moveit_config demo_gazebo.launch
 ```
-2. Dans un second terminal, sourcer et lancer le script python permettant de générer le nuage de point d'une boîte dans la scène
+2. Dans un second terminal, sourcer et lancer le script python permettant de générer le nuage de points d'une boîte placée dans la scène
 ```
 python3 src/script_python/gazebo_box.py
 ```
